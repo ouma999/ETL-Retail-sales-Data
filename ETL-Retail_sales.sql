@@ -101,3 +101,41 @@ JOIN dim_customer c
 JOIN dim_product p
     ON r.Product_Category = p.product_category;
 
+-- Top selling products
+SELECT p.product_category, SUM(f.total_amount) AS revenue
+FROM fact_sales f
+JOIN dim_product p ON f.product_key = p.product_key
+GROUP BY p.product_category
+ORDER BY revenue DESC;
+
+-- Monthly revenue
+SELECT d.year, d.month, SUM(f.total_amount) AS revenue
+FROM fact_sales f
+JOIN dim_date d ON f.date_key = d.date_key
+GROUP BY d.year, d.month
+ORDER BY d.year, d.month;
+
+--monthly sales trend --
+SELECT d.year, d.month, SUM(f.total_amount) AS monthly_revenue
+FROM fact_sales f
+JOIN dim_date d ON f.date_key = d.date_key
+GROUP BY d.year, d.month
+ORDER BY d.year, d.month;
+
+--average sale per transaction --
+SELECT AVG(total_amount) AS avg_transaction_value
+FROM fact_sales;
+---sales by gender--
+SELECT c.gender, SUM(f.total_amount) AS total_revenue
+FROM fact_sales f
+JOIN dim_customer c ON f.customer_key = c.customer_key
+GROUP BY c.gender;
+--Quantity Sold by Product Category--
+SELECT p.product_category, SUM(f.quantity) AS total_quantity
+FROM fact_sales f
+JOIN dim_product p ON f.product_key = p.product_key
+GROUP BY p.product_category
+ORDER BY total_quantity DESC;
+
+
+
